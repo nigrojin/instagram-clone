@@ -85,9 +85,13 @@ exports.login = async (req, res, next) => {
     // 토큰 발급
     const token = _user.generateJWT();
 
+    // 유저 계정 수정
     const user = {
       username: _user.username,
       image: _user.image,
+      email: _user.email,
+      fullName: _user.fullName,
+      bio: _user.bio,
       token
     }
 
@@ -162,3 +166,41 @@ exports.users = async (req, res, next) => {
     next(error)
   }
 }
+
+// 정보 수정
+exports.edit = [
+  fileHandler('profiles').single('image'),
+  async (req, res, next) => {
+    try {
+
+      // req.user: 로그인한 유저
+      const _user = await User.findById(req.user._id);
+
+      // 유저가 파일을 업로드한 경우
+      if (req.file) {
+        _user.image = req.file.filename;
+      }
+
+      // 계정 업데이트
+      Object.assign(_user, req.body);
+
+      await _user.save();
+
+      const token = _user.generateJWT();
+
+      const user = {
+        email: _user.email,
+        username: _user.username,
+        fullName: _user.fullName,
+        image: _user.image,
+        bio: _user.bio,
+        token
+      }
+
+      res.json({ user });
+
+    } catch (error) {
+      next(error)
+    }
+  }
+]
