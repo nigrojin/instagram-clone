@@ -5,6 +5,7 @@ const auth = passport.authenticate('jwt', { session: false });
 const jwtStrategy = require('../auth/jwtStrategy');
 const userController = require('../controllers/userController');
 const articleController = require('../controllers/articleController');
+const commentController = require('../controllers/commentController');
 
 passport.use(jwtStrategy);
 
@@ -33,5 +34,13 @@ router.put('/user', auth, userController.edit);
 /* ARTICLES */
 router.get('/articles', auth, articleController.articles);
 router.get('/articles/:id', auth, articleController.article);
+router.post('/articles', auth, articleController.create);
+router.delete('/articles/:id', auth, articleController.delete);
+router.get('/feed', auth, articleController.feed);
+router.post('/articles/:id/favorite', auth, articleController.favorite);
+router.delete('/articles/:id/favorite', auth, articleController.unfavorite);
+
+/* COMMENTS */
+router.post('/articles/:id/comments', auth, commentController.create);
 
 module.exports = router;
