@@ -6,6 +6,7 @@ const jwtStrategy = require('../auth/jwtStrategy');
 const userController = require('../controllers/userController');
 const articleController = require('../controllers/articleController');
 const commentController = require('../controllers/commentController');
+const profileController = require('../controllers/profileController');
 
 passport.use(jwtStrategy);
 
@@ -41,6 +42,13 @@ router.post('/articles/:id/favorite', auth, articleController.favorite);
 router.delete('/articles/:id/favorite', auth, articleController.unfavorite);
 
 /* COMMENTS */
+router.get('/articles/:id/comments', auth, commentController.comments);
 router.post('/articles/:id/comments', auth, commentController.create);
+router.delete('/comments/:id', auth, commentController.delete);
+
+/* PROFILES */
+router.get('/profiles/:username', auth, profileController.details);
+router.post('/profiles/:username/follow', auth, profileController.follow);
+router.delete('/profiles/:username/follow', auth, profileController.unfollow);
 
 module.exports = router;
