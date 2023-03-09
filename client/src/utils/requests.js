@@ -211,3 +211,84 @@ export async function deleteComment(id) {
 }
 
 /* PROFILES */
+
+// 프로필 가져오기
+export async function getProfile(username) {
+  const res = await fetch(`${server}/profiles/${username}`, {
+    headers: { 'Authorization': 'Bearer ' + JSON.parse(localStorage.getItem("user")).token }
+  })
+
+  if (!res.ok) {
+    throw new Error(`${res.status} ${res.statusText}`);
+  }
+
+  return await res.json();
+}
+
+// 타임라인 가져오기
+export async function getTimeline(username) {
+  const res = await fetch(`${server}/articles/?username=${username}`, {
+    headers: { 'Authorization': 'Bearer ' + JSON.parse(localStorage.getItem("user")).token }
+  })
+
+  if (!res.ok) {
+    throw new Error(`${res.status} ${res.statusText}`);
+  }
+
+  return await res.json();
+}
+
+
+// 팔로워 목록 가져오기
+export async function getFollowers(username) {
+  const res = await fetch(`${server}/users/?followers=${username}`, {
+    headers: { 'Authorization': 'Bearer ' + JSON.parse(localStorage.getItem("user")).token }
+  });
+
+  if (!res.ok) {
+    throw new Error(`${res.status} ${res.statusText}`);
+  }
+
+  return await res.json();
+}
+
+// 팔로잉 목록 가져오기
+export async function getFollowings(username) {
+  const res = await fetch(`${server}/users/?following=${username}`, {
+    headers: { 'Authorization': 'Bearer ' + JSON.parse(localStorage.getItem("user")).token }
+  });
+
+  if (!res.ok) {
+    throw new Error(`${res.status} ${res.statusText}`);
+  }
+
+  return await res.json();
+}
+
+// 팔로우
+export async function follow(username) {
+  const res = await fetch(`${server}/profiles/${username}/follow`, {
+    method: 'POST',
+    headers: { 'Authorization': 'Bearer ' + JSON.parse(localStorage.getItem("user")).token }
+  })
+
+  if (!res.ok) {
+    throw new Error(`${res.status} ${res.statusText}`);
+  }
+
+  return await res.json();
+}
+
+// 언팔로우
+export async function unfollow(username) {
+  const res = await fetch(`${server}/profiles/${username}/follow`, {
+    method: 'DELETE',
+    headers: { 'Authorization': 'Bearer ' + JSON.parse(localStorage.getItem("user")).token }
+  })
+
+  if (!res.ok) {
+    throw new Error(`${res.status} ${res.statusText}`);
+  }
+
+  return await res.json();
+}
