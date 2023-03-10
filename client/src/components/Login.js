@@ -1,7 +1,7 @@
-import { useState, useContext, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import AuthContext from "./AuthContext";
-import { signIn } from "../utils/requests";
+import { useState, useContext, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import AuthContext from './AuthContext';
+import { signIn } from '../utils/requests';
 
 export default function Login() {
 
@@ -12,6 +12,7 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
+  // 로그인 처리 함수
   async function handleSubmit(e) {
     try {
       e.preventDefault();
@@ -19,22 +20,28 @@ export default function Login() {
       setError(null);
 
       const { user } = await signIn(email, password);
-      
-      setUser(user)
 
+      console.log(user);
+
+      // user state를 업데이트 한다
+      setUser(user);
+
+      // 로그인에 성공한 이메일을 localStorage에 저장한다
       localStorage.setItem('email', email);
-      
+
+      // Feed페이지로 이동한다
       setTimeout(() => {
         navigate('/');
-      }, 1000);
-      
+      }, 1000)
+
     } catch (error) {
-      setError(error);
+      setError(error)
     }
   }
 
+  // 타이틀 업데이트
   useEffect(() => {
-    document.title = `Login - Instagram`
+    document.title = 'Login - Instagram';
   }, [])
 
   return (
@@ -84,12 +91,14 @@ export default function Login() {
         Login
       </button>
 
+      {/* 에러 메시지 */}
       {error && <p className="my-4 text-center text-red-500">{error.message}</p>}
 
       <p className="text-center my-4">
         Don't have an account ?  {" "}
         <Link to="/accounts/signup" className="text-blue-500 font-semibold">Sign Up</Link>
       </p>
+
     </form>
   )
 }
